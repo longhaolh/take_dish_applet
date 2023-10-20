@@ -1,0 +1,27 @@
+现在有这样一个扫码点餐小程序的需求,请你根据需求来设计三张表,shop表用来存储所有店铺信息,字段有
+shop_id:主键,整数,自增,非空
+shop_name:店铺名称,字符串,非空,唯一
+shop_address:店铺地址,字符串,非空
+shop_host:店铺负责人,字符串长度20,非空
+shop_phone:店铺联系电话,字符串,非空,长度12
+shop_status:店铺状态,tinyint,默认为0
+dish表,用来存储所有餐品信息,字段有
+id:主键，自增，非空
+shop_id:所属店铺ID,外键,对应shop表的shop_id,非空
+dish_assort:菜品分类，为assort表的外键，非空，默认为assort表的第一条数据的id
+dish_name:菜品名称，字符串、非空、默认值为‘菜品’
+dish_price:菜品价格，小数、非空、默认为0.00，数据默认保留两位小数
+dish_discount:菜品折扣，小数，非空，默认为1.00，范围在0.01~1.00之间 保留两位小数
+dish_poster:菜品封面图，字符串，可以为空
+dish_real_price:菜品折后价，小数，非空，默认为 dish_price * dish_discount 的结果保留两位小数
+dish_imgs:菜品橱窗图，数组，元素为商品图url地址，可以为空，数组长度最大值为5
+dish_sales:月销量，整数,非空，默认为0
+dish_desc:商品描述，字符串，非空，默认为文本‘暂时没有商品描述’
+dish_weight:商品重量,整数，非空，默认为0
+dish_material:商品原料，数组，可以为空
+assort表，字段有
+id:主键、自增、非空
+shop_id:所属店铺ID,shop表的外键,非空
+assort_name:分类名称，字符串，非空,唯一值，默认值为‘默认分类’
+assort_alias:分类别名，字符串，非空，默认值为'default'
+assort_status:分类状态，布尔值，非空，默认值为0
