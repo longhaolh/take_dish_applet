@@ -1,0 +1,46 @@
+# Node.js和npm全局安装的包
+node_modules/
+package-lock.json
+npm-shrinkwrap.json
+
+# 配置文件和文件夹
+config.json
+*.env
+*.key
+*.log
+*.pem
+*.pfx
+*.crt
+*.srl
+*.db
+*.sqlite
+*.backup
+*.swp
+*.dmp
+*.bak
+*.tmp
+*.lock
+*.pid
+*.gz
+*.out
+*.bak
+*.swp
+*.dmp
+*.tmp
+*.lock
+*.pid
+*.gz
+*.out
+
+# 其他忽略的文件和文件夹
+vendor/
+*.iml
+*.idea/
+*.hprof
+*.DS_Store
+*.dbf
+*.dbx
+*. AccDB
+*. Access
+*. fdsyms.h
+node_modules/strongloop/node_modules/lodash/dist/lodash.underscore.js
