@@ -8,12 +8,11 @@ const db = require('../utils/dbConnect')
  * */
 exports.queryDish = (req, res) => {
     const pm = req.query
-    const sql = `SELECT * FROM dish WHERE dish_assort = ${pm.dish_assort} AND shop_id = ${pm.shop_id}`
+    const sql = `SELECT * FROM dish WHERE dish_assort = ${pm.dish_assort} AND shop_id = ${pm.shop_id} AND is_delete = 0 LIMIT 1000`
     db.query(sql, (err, data) => {
         if (err) {
             res.cc(err)
         } else {
-            console.log(data)
             res.send({status: 0, message: '查询成功', list: [...data]})
         }
     })

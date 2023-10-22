@@ -11,7 +11,8 @@ const dish_imgs = joi.string()
 const dish_desc = joi.string().allow(null, '')
 const dish_weight = joi.number()
 const dish_material = joi.string().allow(null, '')
-
+const dish_status = joi.number()
+const is_delete = joi.number()
 // 添加餐品
 exports.add_dish_schema = {
     body: {
@@ -27,8 +28,28 @@ exports.add_dish_schema = {
         dish_material
     }
 }
-exports.delete_dish_schema = {}
-exports.update_dish_schema = {}
+exports.delete_dish_schema = {
+    body: {
+        shop_id,
+        dish_id,
+        is_delete
+    }
+}
+exports.update_dish_schema = {
+    body: {
+        shop_id,
+        dish_id,
+        dish_name: dish_name.allow('', null),
+        dish_price: dish_price.allow('', null),
+        dish_discount: dish_discount.allow('', null),
+        dish_poster: dish_poster.allow('', null),
+        dish_imgs: dish_imgs.allow('', null),
+        dish_desc,
+        dish_weight: dish_weight.allow('', null),
+        dish_material,
+        dish_status
+    }
+}
 // 查询餐品信息
 exports.query_dish_schema = {
     query: {
