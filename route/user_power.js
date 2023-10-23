@@ -5,11 +5,12 @@ const router = express.Router()
 const handler = require('../route_handler/user_power_handler')
 // 导入验证数据的中间件
 const expressJoi = require('@escook/express-joi')
+
 // 导入验证规则
-const {update_user_schema,edit_password_schema,upload_avatar_schema} = require('../schema/user')
-router.get('/getUserInfo',handler.getUserInfo)
-router.post('/updateUserInfo',expressJoi(update_user_schema),handler.updateUserInfo)
-router.post('/editPassword',expressJoi(edit_password_schema),handler.editPassword)
-router.post('/uploadAvatar',expressJoi(upload_avatar_schema),handler.uploadAvatar)
+const {update_user_schema, edit_password_schema, upload_avatar_schema} = require('../schema/user')
+
+router.get('/getUserInfo', handler.getUserInfo)
+router.post('/updateUserInfo', expressJoi(update_user_schema), handler.updateUserInfo)
+router.post('/editPassword', expressJoi(edit_password_schema), handler.editPassword)
 
 module.exports = router
