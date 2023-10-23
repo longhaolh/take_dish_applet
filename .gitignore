@@ -1,6 +1,5 @@
 # Node.js和npm全局安装的包
 node_modules/
-uploads/
 package-lock.json
 npm-shrinkwrap.json
 
