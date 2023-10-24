@@ -5,6 +5,12 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 // 导入全局配置文件
 const config = require('../config')
+// 引入fs模块
+const fs = require('fs');
+const path = require('path');
+const uploadUrl = path.join(__dirname, '../', '/uploads')
+
+// 使用fs模块的readdirSync方法读取目录下的所有文件和子目录
 /**
  * @description 注册接口 接受至少两个入参username和password
  * */
@@ -12,8 +18,9 @@ exports.register = (req, res) => {
     // 通过req.body获取请求中的查询字符串、发送到服务器的数据
     const pm = req.body
     const pwd = bcrypt.hashSync(pm.password, 10)
-    console.log(pm)
-    const sql = `INSERT INTO users (username,password,avatar,email,address,nickname) VALUES ('${pm.username}','${pwd}','${pm.avatarUrl}','${pm.email?pm.email:''}','${pm.address?pm.address:''}','${pm.nickname?pm.nickname:''}')`
+    const sql = `INSERT INTO users (username,password,avatar,email,address,nickname) VALUES ('${pm.username}','${pwd}','${pm.avatarUrl?pm.avatarUrl:''}','${pm.email?pm.email:''}','${pm.address?pm.address:''}','${pm.nickname?pm.nickname:''}')`
+    // 注册完检查下头像目录是否有多余头像文件
+    delete_useless_image()
     // 添加用户信息 密码使用bcrypt.hashSync进行加密处理 bcrypt.hashSync(明文密码:string,随机盐长度:number)
     db.query(sql, (err, data) => {
         if (err) {
@@ -29,6 +36,9 @@ exports.register = (req, res) => {
             });
         }
     })
+}
+const delete_useless_image = (uploadUrl) => {
+    const sql = `SELECT avatar FROM users`
 }
 /**
  * @description 登录接口

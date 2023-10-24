@@ -2,16 +2,42 @@ const db = require('../utils/dbConnect')
 const bcrypt = require('bcryptjs')
 
 /**
- * @description 获取用户信息接口 根据token中的id获取用户信息 req.auth为解析后的token信息
+ * @description 根据id获取用户信息接口 根据token中的id获取用户信息 req.auth为解析后的token信息
  * */
 exports.getUserInfo = (req, res) => {
     db.query("SELECT * FROM users WHERE id = ?", req.auth.id, (err, data) => {
         if (err) {
-            res.status(500).cc(err)
+            res.cc(err)
         } else {
             let userinfo = data[0]
             delete userinfo.password
             res.send({status: 0, message: '获取成功', data: {userinfo}})
+        }
+    })
+}
+/**
+ * @description 管理员admin获取所有用户信息接口 根据token中的id获取用户信息 req.auth为解析后的token信息
+ * */
+exports.getAllUser = (req, res) => {
+    let page_number = req.query.page_number;
+    let page_count = req.query.page_count;
+    if (req.auth.username != 'admin') {
+        return res.cc('您没有权限调用此接口')
+    }
+    const sql = `SELECT * FROM users LIMIT ${page_number>0?page_number - 1:0},${page_count?page_count:10}`
+    db.query(sql, (err, data) => {
+        if (err) {
+            res.cc(err)
+        } else {
+            if (data.length > 0) {
+                let userList = data
+                userList.forEach(e => {
+                    delete e.password
+                })
+                res.send({status: 0, message: '获取成功', data: [...userList || '']})
+            } else {
+                res.send({status: 0, message: '获取成功', data: []})
+            }
         }
     })
 }
@@ -22,7 +48,7 @@ exports.updateUserInfo = (req, res) => {
     // console.log(typeof req.headers.authorization)
     db.query("UPDATE users SET ? WHERE ID = ?", [req.body, req.auth.id], (err, data) => {
         if (err) {
-            res.status(500).cc(err)
+            res.cc(err)
         } else {
             res.send({status: 0, message: '更新成功'})
         }
