@@ -9,6 +9,8 @@ const category_no_power = require('./route/category_no_power')
 const category_power = require('./route/category_power')
 const dish_no_power = require('./route/dish_no_power')
 const dish_power = require('./route/dish_power')
+const shop_no_power = require('./route/shop_no_power')
+const shop_power = require('./route/shop_power')
 const joi = require('joi')
 // 导入解析token的包
 const {expressjwt: jwt} = require("express-jwt");
@@ -41,9 +43,9 @@ app.use(
 )
 
 // 注册无需token的路由模块为全局中间件 并添加/api前缀
-app.use('/api', user_no_power).use('/api', dish_no_power).use('/api', category_no_power)
+app.use('/api', user_no_power).use('/api', dish_no_power).use('/api', category_no_power).use('/api', shop_no_power)
 // 注册需要token的路由模块为全局中间件 并添加/verify前缀
-app.use('/verify', user_power).use('/verify', dish_power).use('/verify', category_power)
+app.use('/verify', user_power).use('/verify', dish_power).use('/verify', category_power).use('/verify', shop_power)
 
 // 配置文件上传中间件
 const storage = multer.diskStorage({
@@ -59,7 +61,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage: storage});
 
-// 处理文件上传请求
+/**
+ * @description 上传头像
+ */
 app.post('/verify/uploadAvatar', upload.single('file'), (req, res) => {
     // 这里的'file'参数对应于前端上传文件的字段名
     if (!req.file) {
@@ -68,6 +72,30 @@ app.post('/verify/uploadAvatar', upload.single('file'), (req, res) => {
     const filePath = `http://127.0.0.1:${port}/uploads/${req.file.filename}`
     // 可以在这里将文件路径保存到数据库，以便后续检索用户头像
     res.status(200).json({status: 0, message: '头像上传完成', avatarUrl: filePath});
+});
+/**
+ * @description 上传营业执照
+ */
+app.post('/verify/uploadLicense', upload.single('file'), (req, res) => {
+    // 这里的'file'参数对应于前端上传文件的字段名
+    if (!req.file) {
+        return res.cc('未收到文件');
+    }
+    const filePath = `http://127.0.0.1:${port}/uploads/${req.file.filename}`
+    // 可以在这里将文件路径保存到数据库，以便后续检索用户头像
+    res.status(200).json({status: 0, message: '营业执照上传完成', avatarUrl: filePath});
+});
+/**
+ * @description 上传海报
+ */
+app.post('/verify/uploadBannerList', upload.single('file'), (req, res) => {
+    // 这里的'file'参数对应于前端上传文件的字段名
+    if (!req.file) {
+        return res.cc('未收到文件');
+    }
+    const filePath = `http://127.0.0.1:${port}/uploads/${req.file.filename}`
+    // 可以在这里将文件路径保存到数据库，以便后续检索用户头像
+    res.status(200).json({status: 0, message: '海报上传完成', avatarUrl: filePath});
 });
 // 定义一个错误中间件来捕获全局的程序错误 它有四个参数err,req,res,next  错误中间件必须在所有路由之后定义
 app.use((err, req, res, next) => {
