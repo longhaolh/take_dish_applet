@@ -7,7 +7,7 @@ const db = require('../utils/dbConnect')
  * @param {number} dish_assort 类目id 必填
  * @param {string} dish_name 餐品名称 必填
  * @param {float} dish_price 餐品原价 必填
- * @param {float} dish_discount 餐品折扣 必填
+ * @param {float} dish_discount 餐品折扣 选填
  * @param {string} dish_poster 餐品封面图url 选填
  * @param {string} dish_real_price 餐品实价 自动计算 dish_price * dish_discount
  * @param {array} dish_imgs 餐品橱窗图 选填

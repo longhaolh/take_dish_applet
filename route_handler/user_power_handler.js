@@ -1,7 +1,7 @@
 const db = require('../utils/dbConnect')
 const bcrypt = require('bcryptjs')
-const {validatePower} = require('../schema/power')
-
+const {validatePower} = require('../utils/power')
+const power = require('../utils/power')
 /**
  * @description 根据id获取用户信息接口 根据token中的id获取用户信息 req.auth为解析后的token信息
  * */
@@ -22,32 +22,34 @@ exports.getUserInfo = (req, res) => {
 exports.getAllUser = (req, res) => {
     let page_number = req.query.page_number;
     let page_count = req.query.page_count;
-    if (req.auth.username != 'admin') {
-        return res.cc('你没有权限调用此接口')
-    }
-    const start = (page_number - 1) * page_count
-    const sql = `SELECT * FROM users LIMIT ${start},${page_count?page_count:10}`
-    db.query(sql, (err, data) => {
-        if (err) {
-            res.cc(err)
-        } else {
-            if (data.length > 0) {
-                db.query(`SELECT COUNT(*) AS total FROM users`, (err1, data1) => {
-                    if (err1) {
-                        res.cc(err1)
-                    } else {
-                        let userList = data
-                        userList.forEach(e => {
-                            delete e.password
-                        })
-                        res.send({status: 0, message: '获取成功', data: [...userList], total: data1[0].total})
-                    }
-                })
+    power.validatePower(req.auth, 2).then(result => {
+        const start = (page_number - 1) * page_count
+        const sql = `SELECT * FROM users LIMIT ${start},${page_count?page_count:10}`
+        db.query(sql, (err, data) => {
+            if (err) {
+                res.cc(err)
             } else {
-                res.send({status: 0, message: '获取成功', data: []})
+                if (data.length > 0) {
+                    db.query(`SELECT COUNT(*) AS total FROM users`, (err1, data1) => {
+                        if (err1) {
+                            res.cc(err1)
+                        } else {
+                            let userList = data
+                            userList.forEach(e => {
+                                delete e.password
+                            })
+                            res.send({status: 0, message: '获取成功', data: [...userList], total: data1[0].total})
+                        }
+                    })
+                } else {
+                    res.send({status: 0, message: '获取成功', data: []})
+                }
             }
-        }
+        })
+    }).catch(error => {
+        res.cc(error.message)
     })
+
 }
 /**
  * @description 用户信息模糊搜索
