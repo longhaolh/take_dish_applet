@@ -8,12 +8,12 @@ const {
     add_dish_schema,
     delete_dish_schema,
     update_dish_schema
-} = require ('../schema/dish')
-// 添加店铺信息
-router.post('/addDish',expressJoi(add_dish_schema),handler.addDish)
-// 删除店铺信息
-router.post('/deleteDish',expressJoi(delete_dish_schema),handler.deleteDish)
-// 修改店铺信息
-router.post('/updateDish',expressJoi(update_dish_schema),handler.updateDish)
+} = require('../schema/dish')
+// 添加商品信息
+router.post('/addDish', expressJoi(add_dish_schema), handler.addDish)
+// 删除商品信息
+router.post('/deleteDish', expressJoi(delete_dish_schema), handler.deleteDish)
+// 修改商品信息
+router.post('/updateDish', expressJoi(update_dish_schema), handler.updateDish)
 
 module.exports = router

@@ -115,8 +115,6 @@ router.post('/uploadDishPoster', upload.single('file'), (req, res) => {
         return res.cc('未收到文件');
     }
     const filePath = `http://127.0.0.1:8888/uploads/dish/${req.file.filename}`
-    console.log(filePath)
-    
     // 可以在这里将文件路径保存到数据库，以便后续检索用户头像
     res.status(200).json({status: 0, message: '菜品封面图上传完成', imgUrl: filePath});
 });

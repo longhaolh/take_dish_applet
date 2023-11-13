@@ -37,6 +37,7 @@ app.use((req, res, next) => {
 app.use('/uploads/avatar', express.static('uploads/avatar'));
 app.use('/uploads/license', express.static('uploads/license'));
 app.use('/uploads/banner', express.static('uploads/banner'));
+app.use('/uploads/dish', express.static('uploads/dish'));
 // 解析token的中间件必须在路由之前配置,unless配置所有/api前缀的接口均不需要进行token验证
 app.use(
     jwt({secret: config.jwtSecrtKey, algorithms: ['HS256']}).unless({

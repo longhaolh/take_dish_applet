@@ -17,21 +17,27 @@ const db = require('../utils/dbConnect')
  */
 exports.addDish = (req, res) => {
     const pm = req.body
-    pm.dish_imgs = pm.dish_imgs.replace(/\[|\]/g, "")
-    pm.dish_material = pm.dish_material.replace(/\[|\]/g, "")
-    console.log(pm)
-    const sql = `INSERT INTO dish (shop_id,dish_assort,dish_name,dish_price,dish_discount,dish_poster,dish_real_price,dish_imgs,dish_desc,dish_weight,dish_material) 
-VALUES (${pm.shop_id},${pm.dish_assort},'${pm.dish_name}',${(pm.dish_price).toFixed(2)},${pm.dish_discount?pm.dish_discount:1.00},'${pm.dish_poster}',${(pm.dish_price * pm.dish_discount).toFixed(2)},'${pm.dish_imgs?pm.dish_imgs:null}','${pm.dish_desc?pm.dish_desc:'暂时没有商品描述'}',${pm.dish_weight},'${pm.dish_material?pm.dish_material:'尚未添加原料信息'}')`
-    console.log(sql)
-    db.query(sql, (err, data) => {
-        if (err) {
-            res.cc(err)
-        } else {
-            if (data.affectedRows > 0) {
-                res.send({status: 0, message: '添加成功'})
+    if (typeof pm.dish_assort === 'string') {
+        pm.dish_assort = pm.dish_assort.split(',')
+    }
+    // 用于跟踪插入操作的计数
+    let insertCount = 0;
+    pm.dish_assort.forEach(e => {
+        const sql = `INSERT INTO dish (shop_id,dish_assort,dish_name,dish_price,dish_discount,dish_poster,dish_real_price,dish_imgs,dish_desc,dish_weight,dish_material) VALUES (${pm.shop_id},${+e},'${pm.dish_name}',${(pm.dish_price).toFixed(2)},${pm.dish_discount ? pm.dish_discount : 1.00},'${pm.dish_poster}',${(pm.dish_price * pm.dish_discount).toFixed(2)},'${pm.dish_imgs ? pm.dish_imgs : null}','${pm.dish_desc ? pm.dish_desc : ''}','${pm.dish_weight}','${pm.dish_material ? pm.dish_material : ''}')`;
+        db.query(sql, (err, data) => {
+            if (err) {
+                // 如果任何一个插入操作出错，立即返回错误响应
+                res.cc(err);
+                return;
             }
-        }
-    })
+            // 计数插入操作
+            insertCount++;
+            if (insertCount === pm.dish_assort.length) {
+                // 所有插入操作都完成，发送成功响应
+                res.send({status: 0, message: '添加成功'});
+            }
+        });
+    });
 }
 /**
  * @author longhao
